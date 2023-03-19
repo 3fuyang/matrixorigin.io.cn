@@ -1,12 +1,12 @@
 {
   "name": "printer",
   "version": "0.1.0",
-  "description": "Print the document as a PDF.",
+  "description": "Prints the MatrixOne document as a PDF.",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "SERVE=1 ./target/release/printer",
-    "print": "playwright test"
+    "start": "SERVE=1 ./printer",
+    "print": "playwright test",
+    "prepare": "playwright install chromium"
   },
   "keywords": [],
   "author": "",

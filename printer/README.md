@@ -4,7 +4,7 @@ This sub project helps export the document to pdf.
 
 ## How to Run
 
-Node.js is required for running `playwright`.
+Node.js is required to run a headless chromium.
 
 ```shell
 # Make sure you are at the correct directory
