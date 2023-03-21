@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const developPosts = await Astro.glob('../../../docs/MatrixOne/Develop/**/*.md')
+---
+
+<BaseLayout>
+  {
+    developPosts.map(({ Content }) => (
+      <article
+        class:list={[
+          'mx-auto',
+          'prose',
+          'prose-h1:break-before-page',
+          'prose-headings:break-inside-avoid-page',
+          'prose-headings:break-after-avoid-page',
+          'prose-pre:break-inside-avoid-page',
+          'prose-code:break-inside-avoid-page',
+          'prose-pre:whitespace-pre',
+          'prose-code:whitespace-pre',
+          'prose-a:text-blue-600',
+        ]}
+      >
+        <Content />
+      </article>
+    ))
+  }
+</BaseLayout>

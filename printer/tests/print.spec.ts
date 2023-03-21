@@ -1,7 +1,6 @@
 import { test } from '@playwright/test'
 
 test('Should print the document as PDF', async ({ page }) => {
-
   await page.goto('http://localhost:3000/print.html')
 
   try {
