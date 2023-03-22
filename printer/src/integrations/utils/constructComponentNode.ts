@@ -1,5 +1,5 @@
 import type { VFile } from 'vfile'
-import type { BlockContent } from 'mdast'
+import type { BlockContent, DefinitionContent } from 'mdast'
 
 type Primitive = string | boolean | number | bigint | symbol | undefined | null
 
@@ -10,7 +10,7 @@ export interface NodeProps {
 function constructAFMDComponentNode(
   hName: string,
   { attributes }: NodeProps,
-  ...children: BlockContent[]
+  ...children: (BlockContent | DefinitionContent)[]
 ) {
   return {
     name: '',
@@ -23,14 +23,14 @@ function constructAFMDComponentNode(
 function constructMDXComponentNode(
   name: string,
   { attributes = {} }: NodeProps = {},
-  ...children: BlockContent[]
+  ...children: (BlockContent | DefinitionContent)[]
 ) {
   return {
     type: 'mdxJsxFlowElement',
     name,
     attributes: Object.entries(attributes)
       // Filter out non-truthy attributes to avoid empty attrs being parsed as `true`.
-      .filter(([_k, v]) => v !== false && Boolean(v))
+      .filter(([, v]) => v !== false && Boolean(v))
       .map(([name, value]) => ({ type: 'mdxJsxAttribute', name, value })),
     children,
   }
@@ -43,7 +43,7 @@ interface ComponentNodeProps extends NodeProps {
 export function constructComponentNode(
   tagName: string,
   { mdx, ...opts }: ComponentNodeProps,
-  ...children: BlockContent[]
+  ...children: (BlockContent | DefinitionContent)[]
 ) {
   const factory = mdx ? constructMDXComponentNode : constructAFMDComponentNode
   return factory(tagName, opts, ...children)
