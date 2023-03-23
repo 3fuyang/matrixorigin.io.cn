@@ -3,22 +3,31 @@ import { join } from 'node:path'
 
 import { assert, test } from 'vitest'
 
-import { matchAdmonitions } from '../src/shared'
+import { replaceAdmonitions } from '../src/shared'
 
-test('Should match MKDocs style admonitions', async () => {
-  const src = await readFile(
-    join(
-      process.cwd(),
-      './tests/contribute-documentation.md'
+test('Should replace MKDocs style admonitions with directive', async () => {
+  const [input, output] = await Promise.all([
+    readFile(
+      join(
+        process.cwd(),
+        './tests/input.md'
+      ),
+      {
+        encoding: 'utf-8'
+      }
     ),
-    {
-      encoding: 'utf-8'
-    }
-  )
+    readFile(
+      join(
+        process.cwd(),
+        './tests/output.md'
+      ),
+      {
+        encoding: 'utf-8'
+      }
+    )
+  ]) 
 
-  const match = matchAdmonitions(src)
+  const result = replaceAdmonitions(input)
 
-  console.dir(match)
-
-  assert.equal(match, `!!! info 注意\r\n    若您在中英文两个仓库都做了修改，那么以上大部分操作都需要分别针对中英文两个仓库都执行一遍。  `)
+  assert.equal(result, output)
 })

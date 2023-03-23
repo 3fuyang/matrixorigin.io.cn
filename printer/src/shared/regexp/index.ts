@@ -1,1 +1,1 @@
-export * from './matchAdmonitions'
+export * from './replaceAdmonitions'
