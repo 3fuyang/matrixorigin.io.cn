@@ -2,11 +2,11 @@
 import type { AsideVariant } from '../integrations/astro-asides'
 
 interface Props {
-  type: AsideVariant
+  type?: AsideVariant
   title?: string
 }
 
-const { type = 'node', title = 'Aside' } = Astro.props
+const { type = 'note', title = 'Aside' } = Astro.props
 
 /**
  * SVG icon paths based on GitHub Octicons
