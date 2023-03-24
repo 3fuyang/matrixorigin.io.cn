@@ -65,6 +65,10 @@ MatrixOne 文档内容可以分为如下几个模块：
 
 当您需要更改文档的具体内容但不涉及章节顺序、架构组织的调整时，需要对 `matrixorigin.io/tree/main/docs/MatrixOne` 或 `matrixorigin.io.cn/tree/main/docs/MatrixOne` 进行操作。
 
+:::note[注意]
+    若您在中英文两个仓库都做了修改，那么以上大部分操作都需要分别针对中英文两个仓库都执行一遍。
+:::
+
 如果需要对章节顺序、架构组织进行调整时，需要对 `matrixorigin.io/blob/main/mkdocs.yml` 或 `matrixorigin.io.cn/blob/main/mkdocs.yml` 进行操作。
 
 以下流程演示的是对二者均做修改的情况，实际情况可以根据您的需求进行简化。
