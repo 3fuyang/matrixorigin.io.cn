@@ -16,7 +16,6 @@ export function replaceAdmonitions(src: string) {
     const title = src.match(META_PATTERN)?.[1]
     title && (src = src.replace(META_PATTERN, ''))
 
-    console.log(type, title)
-    return `:::${type}[${title}]${src}\r\n:::`
+    return `:::${type}[${title}]${src}\n:::`
   })
 }
