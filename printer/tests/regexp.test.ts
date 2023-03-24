@@ -13,7 +13,7 @@ test('Should replace MKDocs style admonitions with directive', async () => {
         './tests/input.md'
       ),
       {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       }
     ),
     readFile(
@@ -22,7 +22,7 @@ test('Should replace MKDocs style admonitions with directive', async () => {
         './tests/output.md'
       ),
       {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       }
     )
   ]) 
