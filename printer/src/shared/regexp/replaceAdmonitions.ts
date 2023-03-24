@@ -1,5 +1,4 @@
-const ADMONITIONS_PATTERN = /!!!((.(?!\n\n|\r\n\r\n))*.)/sg
-const META_PATTERN = /^\s*([^\s]+)/
+const ADMONITIONS_PATTERN = /!!![^\r\n\S]*(?<type>[^\s]+)?[^\r\n\S]*(?<title>[^\s]+)?((.(?!\n\n|\r\n\r\n))*.)/sg
 
 /**
  * Replace MKDocs style admonitions with
@@ -7,15 +6,7 @@ const META_PATTERN = /^\s*([^\s]+)/
  * @param src Markdown content.
  */
 export function replaceAdmonitions(src: string) {
-  return src.replace(ADMONITIONS_PATTERN, (_, p1: string) => {
-    let src = p1
-
-    const type = src.match(META_PATTERN)?.[1]
-    type && (src = src.replace(META_PATTERN, ''))
-
-    const title = src.match(META_PATTERN)?.[1]
-    title && (src = src.replace(META_PATTERN, ''))
-
-    return `:::${type}[${title}]${src}\n:::`
+  return src.replace(ADMONITIONS_PATTERN, (_, type: string, title: string, content: string) => {
+    return `:::${type ?? 'info'}[${title ?? '注意'}]${content}\n:::`
   })
 }
