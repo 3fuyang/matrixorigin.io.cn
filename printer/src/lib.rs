@@ -1,5 +1,7 @@
 use std::{env, error::Error, fs, path::PathBuf, str::FromStr};
 
+use walkdir::{WalkDir, DirEntry};
+use fancy_regex::{Regex, Captures};
 use mdbook::{Config, MDBook};
 
 pub struct CLIConfig {
@@ -32,17 +34,96 @@ impl CLIConfig {
     }
 }
 
+/// Asserts `markdown` files.
+fn is_md(entry: &DirEntry) -> bool {
+    entry.file_name()
+        .to_str()
+        .map(|e| e.ends_with(".md"))
+        .unwrap_or(false)
+}
+
+/// Asserts `mdx` files.
+fn is_mdx(entry: &DirEntry) -> bool {
+    entry.file_name()
+        .to_str()
+        .map(|e| e.ends_with(".mdx"))
+        .unwrap_or(false)
+}
+
+/// Replace mkdocs-style admonition component syntax.
+fn replace_admonitions(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
+    let src = fs::read_to_string(entry.path())?;
+    let adm_re = Regex::new(r"(?s)!!![^\r\n\S]*(?<type>[^\s]+)?[^\r\n\S]*(?<title>[^\r\n]+)?((.(?!\n\n|\r\n\r\n))*.)")?;
+
+    let match_adm = adm_re.is_match(&src)?;
+
+    if match_adm {
+        let after = adm_re.replace_all(&src, |caps: &Captures| {
+            let adm_type = &caps.get(1).map(|m| m.as_str()).unwrap_or("info");
+            let adm_title = &caps.get(2).map(|m| m.as_str()).unwrap_or("注意");
+            let adm_content = &caps[3];
+            format!(
+                ":::{}[{}]{}\r\n:::",
+                adm_type,
+                adm_title,
+                adm_content
+            )
+        });
+
+        fs::write(entry.path(), after.to_string())?;
+    }
+
+    Ok(())
+}
+
+/// Renames `.md` files to `.mdx`.
+fn rename_md_to_mdx() -> Result<(), Box<dyn Error>> {
+    for entry in WalkDir::new("../docs/MatrixOne") {
+        let entry = entry?;
+        if is_md(&entry) {
+            replace_admonitions(&entry)?;
+            // rename_file(&entry, "mdx")?;
+        }
+    }
+
+    Ok(())
+}
+
+/// Renames `.mdx` files to `.md`.
+fn rename_mdx_to_md() -> Result<(), Box<dyn Error>> {
+    for entry in WalkDir::new("../docs/MatrixOne") {
+        let entry = entry?;
+        if is_mdx(&entry) {
+            rename_file(&entry, "md")?;
+        }
+    }
+
+    Ok(())
+}
+
+/// Renames a file with the given new extension.
+fn rename_file(entry: &DirEntry, new_ext: &str) -> Result<(), Box<dyn Error>> {
+    let old_path = entry.path();
+    let new_path = old_path.with_extension(new_ext);
+    fs::rename(&old_path, &new_path)?;
+    Ok(())
+}
+
 pub async fn run(cli_config: CLIConfig) -> Result<(), Box<dyn Error>> {
     let config_src = fs::read_to_string(cli_config.config_src_path)?;
     let config = Config::from_str(&config_src)?;
 
     let book_rel_path = config.build.build_dir.clone();
 
-    if let Err(err) = MDBook::load_with_config(&cli_config.book_root, config)?.build() {
-        return Err(err.into());
-    }
+    // if let Err(err) = MDBook::load_with_config(&cli_config.book_root, config)?.build() {
+    //     return Err(err.into());
+    // }
 
-    println!("Book generated successfully.");
+    // println!("Book generated successfully.");
+
+    if let Err(err) = rename_md_to_mdx() {
+        return Err(err.into());
+    };
 
     let book_root = cli_config.book_root;
 
