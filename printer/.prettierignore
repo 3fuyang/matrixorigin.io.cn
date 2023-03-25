@@ -3,3 +3,4 @@ node_modules
 .github
 .astro
 target
+tests/*.md

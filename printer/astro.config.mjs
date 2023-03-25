@@ -5,6 +5,7 @@ import mdx from '@astrojs/mdx'
 
 import vitesseDark from './src/styles/vitesse-dark.json'
 import { astroAsides, asideAutoImport } from './src/integrations/astro-asides'
+import { astroMKDocsLink } from './src/integrations/astro-mkdocs-link'
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +19,7 @@ export default defineConfig({
       imports: [asideAutoImport],
     }),
     tailwind(),
+    astroMKDocsLink(),
     astroAsides(),
     mdx(),
   ],

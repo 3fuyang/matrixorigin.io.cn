@@ -1,8 +1,8 @@
 use std::{env, error::Error, fs, path::PathBuf, str::FromStr};
 
-use walkdir::{WalkDir, DirEntry};
-use fancy_regex::{Regex, Captures};
+use fancy_regex::{Captures, Regex};
 use mdbook::{Config, MDBook};
+use walkdir::{DirEntry, WalkDir};
 
 pub struct CLIConfig {
     pub book_root: PathBuf,
@@ -36,7 +36,8 @@ impl CLIConfig {
 
 /// Asserts `markdown` files.
 fn is_md(entry: &DirEntry) -> bool {
-    entry.file_name()
+    entry
+        .file_name()
         .to_str()
         .map(|e| e.ends_with(".md"))
         .unwrap_or(false)
@@ -44,7 +45,8 @@ fn is_md(entry: &DirEntry) -> bool {
 
 /// Asserts `mdx` files.
 fn is_mdx(entry: &DirEntry) -> bool {
-    entry.file_name()
+    entry
+        .file_name()
         .to_str()
         .map(|e| e.ends_with(".mdx"))
         .unwrap_or(false)
@@ -53,7 +55,9 @@ fn is_mdx(entry: &DirEntry) -> bool {
 /// Replace mkdocs-style admonition component syntax.
 fn replace_admonitions(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
     let src = fs::read_to_string(entry.path())?;
-    let adm_re = Regex::new(r"(?s)!!![^\r\n\S]*(?<type>[^\s]+)?[^\r\n\S]*(?<title>[^\r\n]+)?((.(?!\n\n|\r\n\r\n))*.)")?;
+    let adm_re = Regex::new(
+        r"(?s)!!![^\r\n\S]*(?<type>[^\s]+)?[^\r\n\S]*(?<title>[^\r\n]+)?((.(?!\n\n|\r\n\r\n))*.)",
+    )?;
 
     let match_adm = adm_re.is_match(&src)?;
 
@@ -62,12 +66,7 @@ fn replace_admonitions(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
             let adm_type = &caps.get(1).map(|m| m.as_str()).unwrap_or("info");
             let adm_title = &caps.get(2).map(|m| m.as_str()).unwrap_or("注意");
             let adm_content = &caps[3];
-            format!(
-                ":::{}[{}]{}\r\n:::",
-                adm_type,
-                adm_title,
-                adm_content
-            )
+            format!(":::{}[{}]{}\r\n:::", adm_type, adm_title, adm_content)
         });
 
         fs::write(entry.path(), after.to_string())?;

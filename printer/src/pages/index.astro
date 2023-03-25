@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 
-const developPosts = await Astro.glob('../../../docs/MatrixOne/Develop/**/*.{md,mdx}')
+const developPosts = await Astro.glob(
+  '../../../docs/MatrixOne/Develop/**/*.{md,mdx}'
+)
 ---
 
 <BaseLayout>
