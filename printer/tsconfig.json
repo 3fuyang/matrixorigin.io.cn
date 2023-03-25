@@ -1,4 +1,8 @@
 {
   "extends": "astro/tsconfigs/strictest",
-  "include": ["vitest.config.ts"]
+  "include": ["vitest.config.ts"],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
+  }
 }

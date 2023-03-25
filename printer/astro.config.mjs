@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import AutoImport from 'astro-auto-import'
 import mdx from '@astrojs/mdx'
+import solidJs from '@astrojs/solid-js'
 
 import vitesseDark from './src/styles/vitesse-dark.json'
 import { astroAsides, asideAutoImport } from './src/integrations/astro-asides'
@@ -22,5 +23,6 @@ export default defineConfig({
     astroMKDocsLink(),
     astroAsides(),
     mdx(),
+    solidJs(),
   ],
 })
