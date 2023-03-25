@@ -81,7 +81,7 @@ fn rename_md_to_mdx() -> Result<(), Box<dyn Error>> {
         let entry = entry?;
         if is_md(&entry) {
             replace_admonitions(&entry)?;
-            // rename_file(&entry, "mdx")?;
+            rename_file(&entry, "mdx")?;
         }
     }
 
