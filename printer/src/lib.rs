@@ -52,27 +52,82 @@ fn is_mdx(entry: &DirEntry) -> bool {
         .unwrap_or(false)
 }
 
+/// Process markdown source.
+fn process_markdown_source(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
+    let mut modified: bool = false;
+    let mut result = fs::read_to_string(entry.path())?;
+
+    if let Ok((m, after)) = replace_admonitions(&result) {
+        modified = m;
+        result = after;
+    }
+    if let Ok((m, after)) = escape_mdx_preserved(&result) {
+        modified = modified || m;
+        result = after;
+    }
+
+    if modified {
+        fs::write(entry.path(), result.to_string())?;
+    }
+
+    Ok(())
+}
+
 /// Replace mkdocs-style admonition component syntax.
-fn replace_admonitions(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
-    let src = fs::read_to_string(entry.path())?;
+fn replace_admonitions(src: &str) -> Result<(bool, String), Box<dyn Error>> {
     let adm_re = Regex::new(
         r"(?s)!!![^\r\n\S]*(?<type>[^\s]+)?[^\r\n\S]*(?<title>[^\r\n]+)?((.(?!\n\n|\r\n\r\n))*.)",
     )?;
 
-    let match_adm = adm_re.is_match(&src)?;
+    let match_adm = adm_re.is_match(src)?;
 
-    if match_adm {
-        let after = adm_re.replace_all(&src, |caps: &Captures| {
-            let adm_type = &caps.get(1).map(|m| m.as_str()).unwrap_or("info");
-            let adm_title = &caps.get(2).map(|m| m.as_str()).unwrap_or("注意");
-            let adm_content = &caps[3];
-            format!(":::{}[{}]{}\r\n:::", adm_type, adm_title, adm_content)
-        });
-
-        fs::write(entry.path(), after.to_string())?;
+    if !match_adm {
+        return Ok((match_adm, src.to_string()));
     }
 
-    Ok(())
+    let after = adm_re.replace_all(&src, |caps: &Captures| {
+        let adm_type = caps.get(1).map(|m| m.as_str()).unwrap_or("info");
+        let adm_title = caps.get(2).map(|m| m.as_str()).unwrap_or("注意");
+        let adm_content = &caps[3];
+        format!(":::{}[{}]{}\r\n:::", adm_type, adm_title, adm_content)
+    });
+
+    Ok((match_adm, after.to_string()))
+}
+
+/// Escape mdx preserved keywords.
+///
+/// TODO: Join the three regexes.
+fn escape_mdx_preserved(src: &str) -> Result<(bool, String), Box<dyn Error>> {
+    let mut result = String::from(src);
+
+    let break_line_tag_re = Regex::new(r"<br>")?;
+    let left_curly_bracket_re = Regex::new(r"{")?;
+    let select_list_re = Regex::new(r"<select_list>")?;
+
+    let match_br = break_line_tag_re.is_match(src)?;
+    if match_br {
+        result = break_line_tag_re.replace_all(&result, "<br/>").to_string();
+    }
+
+    let match_left_curly_bracket = left_curly_bracket_re.is_match(&result)?;
+    if match_left_curly_bracket {
+        result = left_curly_bracket_re
+            .replace_all(&result, r"\{")
+            .to_string();
+    }
+
+    let match_select_list = select_list_re.is_match(&result)?;
+    if match_select_list {
+        result = select_list_re
+            .replace_all(&result, r"\<select-list>")
+            .to_string();
+    }
+
+    Ok((
+        match_br || match_left_curly_bracket || match_select_list,
+        result,
+    ))
 }
 
 /// Renames `.md` files to `.mdx`.
@@ -80,7 +135,7 @@ fn rename_md_to_mdx() -> Result<(), Box<dyn Error>> {
     for entry in WalkDir::new("../docs/MatrixOne") {
         let entry = entry?;
         if is_md(&entry) {
-            replace_admonitions(&entry)?;
+            process_markdown_source(&entry)?;
             rename_file(&entry, "mdx")?;
         }
     }
