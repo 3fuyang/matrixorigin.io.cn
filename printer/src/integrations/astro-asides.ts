@@ -1,8 +1,5 @@
 import type { AstroIntegration } from 'astro'
-import type {
-  Root as MdastRoot,
-  Paragraph as MdastParagraph,
-} from 'mdast'
+import type { Root as MdastRoot, Paragraph as MdastParagraph } from 'mdast'
 import type {
   Plugin as UnifiedPlugin,
   Transformer as UnifiedTransformer,
@@ -72,10 +69,7 @@ export function astroAsides(): AstroIntegration {
       'astro:config:setup': ({ updateConfig }) => {
         updateConfig({
           markdown: {
-            remarkPlugins: [
-              remarkDirective,
-              remarkAsides(),
-            ],
+            remarkPlugins: [remarkDirective, remarkAsides()],
           },
         })
       },

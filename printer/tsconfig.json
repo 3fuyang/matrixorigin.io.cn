@@ -1,6 +1,4 @@
 {
   "extends": "astro/tsconfigs/strictest",
-  "include": [
-    "vitest.config.ts"
-  ]
+  "include": ["vitest.config.ts"]
 }

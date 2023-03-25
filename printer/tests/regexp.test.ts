@@ -7,25 +7,13 @@ import { replaceAdmonitions } from '../src/shared'
 
 test('Should replace MKDocs style admonitions with directive', async () => {
   const [input, output] = await Promise.all([
-    readFile(
-      join(
-        process.cwd(),
-        './tests/input.md'
-      ),
-      {
-        encoding: 'utf8'
-      }
-    ),
-    readFile(
-      join(
-        process.cwd(),
-        './tests/output.md'
-      ),
-      {
-        encoding: 'utf8'
-      }
-    )
-  ]) 
+    readFile(join(process.cwd(), './tests/input.md'), {
+      encoding: 'utf8',
+    }),
+    readFile(join(process.cwd(), './tests/output.md'), {
+      encoding: 'utf8',
+    }),
+  ])
 
   const result = replaceAdmonitions(input)
 

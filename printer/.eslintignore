@@ -5,3 +5,4 @@ node_modules
 src/env.d.ts
 vitest.config.ts
 target
+tests/*.md
