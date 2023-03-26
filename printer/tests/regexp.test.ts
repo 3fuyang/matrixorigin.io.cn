@@ -1,9 +1,14 @@
+/* eslint-disable no-useless-escape */
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { assert, describe, test } from 'vitest'
 
-import { replaceAdmonitions, extractMainTitle } from '../src/shared'
+import {
+  replaceAdmonitions,
+  extractMainTitle,
+  escapeArrowBrackets,
+} from '../src/shared'
 
 test('Should replace MKDocs-style admonitions with generic directives', async () => {
   const [input, output] = await Promise.all([
@@ -52,4 +57,45 @@ describe('Should generate proper markdown headings', () => {
       'matrixone-的显式事务'
     )
   })
+})
+
+test('Should escape left arrow brackets which are not html tags', () => {
+  const src = `
+<select-list>
+<br>
+
+Type a < and << operator.
+
+<img src="#" />
+
+<a href="#" ></a>
+
+<c name="workflow"></c>
+
+<br/>
+
+<!-- This a comment line. -->
+`
+
+  const result = escapeArrowBrackets(src)
+
+  assert.strictEqual(
+    result,
+    `
+<select-list>
+<br>
+
+Type a \< and \<\< operator.
+
+<img src="#" />
+
+<a href="#" ></a>
+
+<c name="workflow"></c>
+
+<br/>
+
+<!-- This a comment line. -->
+`
+  )
 })

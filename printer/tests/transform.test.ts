@@ -13,12 +13,10 @@ const exampleObj = {
           'MatrixOne 简介': 'Overview/matrixone-introduction.md',
         },
         {
-          'MatrixOne 功能列表':
-            'Overview/matrixone-feature-list.md',
+          'MatrixOne 功能列表': 'Overview/matrixone-feature-list.md',
         },
         {
-          'MatrixOne 技术架构':
-            'Overview/matrixone-architecture-design.md',
+          'MatrixOne 技术架构': 'Overview/matrixone-architecture-design.md',
         },
         {
           'MySQL 兼容性': 'Overview/mysql-compatibility.md',
@@ -79,7 +77,7 @@ const exampleObj = {
 const expected: PostNode[] = [
   {
     title: '主页',
-    path: 'README.md',
+    path: 'README.mdx',
     children: [],
   },
   {
@@ -88,27 +86,27 @@ const expected: PostNode[] = [
     children: [
       {
         title: 'MatrixOne 简介',
-        path: 'Overview/matrixone-introduction.md',
+        path: 'Overview/matrixone-introduction.mdx',
         children: [],
       },
       {
         title: 'MatrixOne 功能列表',
-        path: 'Overview/matrixone-feature-list.md',
+        path: 'Overview/matrixone-feature-list.mdx',
         children: [],
       },
       {
         title: 'MatrixOne 技术架构',
-        path: 'Overview/matrixone-architecture-design.md',
+        path: 'Overview/matrixone-architecture-design.mdx',
         children: [],
       },
       {
         title: 'MySQL 兼容性',
-        path: 'Overview/mysql-compatibility.md',
+        path: 'Overview/mysql-compatibility.mdx',
         children: [],
       },
       {
         title: '最新动态',
-        path: 'Overview/whats-new.md',
+        path: 'Overview/whats-new.mdx',
         children: [],
       },
     ],
@@ -123,7 +121,7 @@ const expected: PostNode[] = [
         children: [
           {
             title: '单机部署 MatrixOne 概述',
-            path: 'Get-Started/install-standalone-matrixone.md',
+            path: 'Get-Started/install-standalone-matrixone.mdx',
             children: [],
           },
           {
@@ -132,17 +130,17 @@ const expected: PostNode[] = [
             children: [
               {
                 title: '使用源代码部署',
-                path: 'Get-Started/install-on-macos/install-on-macos-method1.md',
+                path: 'Get-Started/install-on-macos/install-on-macos-method1.mdx',
                 children: [],
               },
               {
                 title: '使用二进制包部署',
-                path: 'Get-Started/install-on-macos/install-on-macos-method2.md',
+                path: 'Get-Started/install-on-macos/install-on-macos-method2.mdx',
                 children: [],
               },
               {
                 title: '使用 Docker 部署',
-                path: 'Get-Started/install-on-macos/install-on-macos-method3.md',
+                path: 'Get-Started/install-on-macos/install-on-macos-method3.mdx',
                 children: [],
               },
             ],
@@ -153,17 +151,17 @@ const expected: PostNode[] = [
             children: [
               {
                 title: '使用源代码部署',
-                path: 'Get-Started/install-on-linux/install-on-linux-method1.md',
+                path: 'Get-Started/install-on-linux/install-on-linux-method1.mdx',
                 children: [],
               },
               {
                 title: '使用二进制包部署',
-                path: 'Get-Started/install-on-linux/install-on-linux-method2.md',
+                path: 'Get-Started/install-on-linux/install-on-linux-method2.mdx',
                 children: [],
               },
               {
                 title: '使用 Docker 部署',
-                path: 'Get-Started/install-on-linux/install-on-linux-method3.md',
+                path: 'Get-Started/install-on-linux/install-on-linux-method3.mdx',
                 children: [],
               },
             ],
@@ -172,7 +170,7 @@ const expected: PostNode[] = [
       },
       {
         title: 'SQL 的基本操作',
-        path: 'Get-Started/basic-sql.md',
+        path: 'Get-Started/basic-sql.mdx',
         children: [],
       },
     ],
@@ -211,6 +209,6 @@ test('Should traverse the tree in preorder', () => {
     '使用源代码部署',
     '使用二进制包部署',
     '使用 Docker 部署',
-    'SQL 的基本操作'
+    'SQL 的基本操作',
   ])
 })

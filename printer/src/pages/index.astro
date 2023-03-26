@@ -1,14 +1,34 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
-const developPosts = await Astro.glob(
-  '../../../docs/MatrixOne/Develop/**/*.{md,mdx}'
+import { parse } from 'yaml'
+
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { preWalk, transformCatalog } from '~/shared'
+
+const mkdocsYaml = parse(
+  await readFile(join(process.cwd(), '../mkdocs.yml'), 'utf8')
 )
+
+const catalog = transformCatalog(mkdocsYaml.nav[0])
+
+const globTasks: Promise<Record<string, any>>[] = []
+
+for (const node of catalog) {
+  preWalk(node, ({ path }) => {
+    if (path) {
+      globTasks.push(import(`../../../docs/MatrixOne/${path}`))
+    }
+  })
+}
+
+const posts = await Promise.all(globTasks)
 ---
 
 <BaseLayout>
   {
-    developPosts.map(({ Content }) => (
+    posts.map(({ Content }) => (
       <article
         class:list={[
           'mx-auto',
