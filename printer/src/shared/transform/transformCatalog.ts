@@ -1,14 +1,6 @@
-interface NestedObject {
-  [key: string]: NestedObject[] | string
-}
+import type { PostNode, NestedObject } from './types'
 
-interface PostNode {
-  title: string
-  path: string
-  children: PostNode[]
-}
-
-export function transformIndex(obj: object) {
+export function transformCatalog(obj: object) {
   const rootRawFolder = obj['MatrixOne'] as NestedObject[]
 
   const result: PostNode[] = transform(rootRawFolder)
@@ -30,7 +22,7 @@ function transform(objs: NestedObject[]) {
     }
 
     if (typeof val === 'string') {
-      node.path = val
+      node.path = val.replace(/^MatrixOne\//g, '')
     } else {
       node.children = transform(val)
     }
