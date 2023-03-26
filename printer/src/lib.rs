@@ -53,7 +53,7 @@ fn is_mdx(entry: &DirEntry) -> bool {
 }
 
 /// Process markdown source.
-fn process_markdown_source(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
+fn process_markdown_source(entry: &DirEntry) -> Result<bool, Box<dyn Error>> {
     let mut modified: bool = false;
     let mut result = fs::read_to_string(entry.path())?;
 
@@ -61,16 +61,17 @@ fn process_markdown_source(entry: &DirEntry) -> Result<(), Box<dyn Error>> {
         modified = m;
         result = after;
     }
-    if let Ok((m, after)) = escape_mdx_preserved(&result) {
-        modified = modified || m;
-        result = after;
+    if modified {
+        if let Ok((_m, after)) = escape_mdx_preserved(&result) {
+            result = after;
+        }
     }
 
     if modified {
         fs::write(entry.path(), result.to_string())?;
     }
 
-    Ok(())
+    Ok(modified)
 }
 
 /// Replace mkdocs-style admonition component syntax.
@@ -103,7 +104,7 @@ fn escape_mdx_preserved(src: &str) -> Result<(bool, String), Box<dyn Error>> {
 
     let break_line_tag_re = Regex::new(r"<br>")?;
     let left_curly_bracket_re = Regex::new(r"{")?;
-    let left_arrow_bracket_re = Regex::new(r"<(?!https?|a\s|c\s|img\s|br|!--|/\w)")?;
+    let left_arrow_bracket_re = Regex::new(r"<(?!https?|p|a\s|c\s|img\s|br|h3|/\w)")?;
 
     let match_br = break_line_tag_re.is_match(src)?;
     if match_br {
@@ -131,12 +132,14 @@ fn escape_mdx_preserved(src: &str) -> Result<(bool, String), Box<dyn Error>> {
 }
 
 /// Renames `.md` files to `.mdx`.
-fn rename_md_to_mdx() -> Result<(), Box<dyn Error>> {
+fn process_md_file() -> Result<(), Box<dyn Error>> {
     for entry in WalkDir::new("../docs/MatrixOne") {
         let entry = entry?;
         if is_md(&entry) {
-            process_markdown_source(&entry)?;
-            rename_file(&entry, "mdx")?;
+            let modified = process_markdown_source(&entry)?;
+            if modified {
+                rename_file(&entry, "mdx")?;
+            }
         }
     }
 
@@ -175,7 +178,7 @@ pub async fn run(cli_config: CLIConfig) -> Result<(), Box<dyn Error>> {
 
     // println!("Book generated successfully.");
 
-    if let Err(err) = rename_md_to_mdx() {
+    if let Err(err) = process_md_file() {
         return Err(err.into());
     };
 
