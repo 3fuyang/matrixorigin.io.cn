@@ -22,7 +22,7 @@ function transform(objs: NestedObject[]) {
     }
 
     if (typeof val === 'string') {
-      node.path = val.replace(/^MatrixOne\//g, '')
+      node.path = val.replace(/^MatrixOne\//, '').replace(/\.md$/, '.mdx')
     } else {
       node.children = transform(val)
     }
