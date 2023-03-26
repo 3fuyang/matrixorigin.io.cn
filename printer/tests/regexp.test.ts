@@ -8,6 +8,7 @@ import {
   replaceAdmonitions,
   extractMainTitle,
   escapeArrowBrackets,
+  eraseComments,
 } from '../src/shared'
 
 test('Should replace MKDocs-style admonitions with generic directives', async () => {
@@ -60,42 +61,20 @@ describe('Should generate proper markdown headings', () => {
 })
 
 test('Should escape left arrow brackets which are not html tags', () => {
-  const src = `
-<select-list>
-<br>
-
-Type a < and << operator.
-
-<img src="#" />
-
-<a href="#" ></a>
-
-<c name="workflow"></c>
-
-<br/>
-
-<!-- This a comment line. -->
-`
+  const src = `\n<select-list>\n<br>\n\nType a < and << operator.\n\n<img src="#" />\n\n<a href="#" ></a>\n\n<c name="workflow"></c>\n\n<br/>\n\n<!-- This a comment line. -->`
 
   const result = escapeArrowBrackets(src)
 
   assert.strictEqual(
     result,
-    `
-<select-list>
-<br>
-
-Type a \< and \<\< operator.
-
-<img src="#" />
-
-<a href="#" ></a>
-
-<c name="workflow"></c>
-
-<br/>
-
-<!-- This a comment line. -->
-`
+    `\n<select-list>\n<br>\n\nType a \< and \<\< operator.\n\n<img src="#" />\n\n<a href="#" ></a>\n\n<c name="workflow"></c>\n\n<br/>\n\n<!-- This a comment line. -->`
   )
+})
+
+test('Should erase html style comments', () => {
+  const src = `I <!-- Maybe you? -->am <!-- perhaps -->a database <!-- What the heck is that -->rockstar.<!-- Yea\nh\nh\nhhhh-->`
+
+  const result = eraseComments(src)
+
+  assert.equal(result, 'I am a database rockstar.')
 })
