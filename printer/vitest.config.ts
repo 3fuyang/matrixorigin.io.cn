@@ -2,5 +2,7 @@
 import { getViteConfig } from 'astro/config'
 
 export default getViteConfig({
-  test: {},
+  test: {
+    exclude: ['tests/print.spec.ts', 'node_modules'],
+  },
 })
