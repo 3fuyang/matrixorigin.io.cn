@@ -77,7 +77,7 @@ const exampleObj = {
 const expected: PostNode[] = [
   {
     title: '主页',
-    path: 'README.mdx',
+    path: 'README.md',
     children: [],
   },
   {
@@ -86,27 +86,27 @@ const expected: PostNode[] = [
     children: [
       {
         title: 'MatrixOne 简介',
-        path: 'Overview/matrixone-introduction.mdx',
+        path: 'Overview/matrixone-introduction.md',
         children: [],
       },
       {
         title: 'MatrixOne 功能列表',
-        path: 'Overview/matrixone-feature-list.mdx',
+        path: 'Overview/matrixone-feature-list.md',
         children: [],
       },
       {
         title: 'MatrixOne 技术架构',
-        path: 'Overview/matrixone-architecture-design.mdx',
+        path: 'Overview/matrixone-architecture-design.md',
         children: [],
       },
       {
         title: 'MySQL 兼容性',
-        path: 'Overview/mysql-compatibility.mdx',
+        path: 'Overview/mysql-compatibility.md',
         children: [],
       },
       {
         title: '最新动态',
-        path: 'Overview/whats-new.mdx',
+        path: 'Overview/whats-new.md',
         children: [],
       },
     ],
@@ -121,7 +121,7 @@ const expected: PostNode[] = [
         children: [
           {
             title: '单机部署 MatrixOne 概述',
-            path: 'Get-Started/install-standalone-matrixone.mdx',
+            path: 'Get-Started/install-standalone-matrixone.md',
             children: [],
           },
           {
@@ -130,17 +130,17 @@ const expected: PostNode[] = [
             children: [
               {
                 title: '使用源代码部署',
-                path: 'Get-Started/install-on-macos/install-on-macos-method1.mdx',
+                path: 'Get-Started/install-on-macos/install-on-macos-method1.md',
                 children: [],
               },
               {
                 title: '使用二进制包部署',
-                path: 'Get-Started/install-on-macos/install-on-macos-method2.mdx',
+                path: 'Get-Started/install-on-macos/install-on-macos-method2.md',
                 children: [],
               },
               {
                 title: '使用 Docker 部署',
-                path: 'Get-Started/install-on-macos/install-on-macos-method3.mdx',
+                path: 'Get-Started/install-on-macos/install-on-macos-method3.md',
                 children: [],
               },
             ],
@@ -151,17 +151,17 @@ const expected: PostNode[] = [
             children: [
               {
                 title: '使用源代码部署',
-                path: 'Get-Started/install-on-linux/install-on-linux-method1.mdx',
+                path: 'Get-Started/install-on-linux/install-on-linux-method1.md',
                 children: [],
               },
               {
                 title: '使用二进制包部署',
-                path: 'Get-Started/install-on-linux/install-on-linux-method2.mdx',
+                path: 'Get-Started/install-on-linux/install-on-linux-method2.md',
                 children: [],
               },
               {
                 title: '使用 Docker 部署',
-                path: 'Get-Started/install-on-linux/install-on-linux-method3.mdx',
+                path: 'Get-Started/install-on-linux/install-on-linux-method3.md',
                 children: [],
               },
             ],
@@ -170,7 +170,7 @@ const expected: PostNode[] = [
       },
       {
         title: 'SQL 的基本操作',
-        path: 'Get-Started/basic-sql.mdx',
+        path: 'Get-Started/basic-sql.md',
         children: [],
       },
     ],
@@ -183,11 +183,13 @@ test('Should generate the catalog', () => {
   assert.deepEqual(result, expected)
 })
 
-test('Should traverse the tree in preorder', () => {
+test('Should traverse the tree in preorder', async () => {
   const result: string[] = []
 
   for (const node of expected) {
-    preWalk(node, ({ title }) => result.push(title))
+    await preWalk(node, async ({ title }) => {
+      result.push(title)
+    })
   }
 
   assert.deepEqual(result, [

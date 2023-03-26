@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
@@ -10,6 +11,8 @@ import type {
 import { visit } from 'unist-util-visit'
 
 import { extractMainTitle } from '../shared'
+
+const DOCS_ABS_DIR = join(process.cwd(), '../docs')
 
 function remarkMKDocsLink(): UnifiedPlugin<[], MdastRoot> {
   const transformer: UnifiedTransformer<MdastRoot> = async (tree, file) => {
@@ -30,7 +33,10 @@ function remarkMKDocsLink(): UnifiedPlugin<[], MdastRoot> {
         // Absolute dirname
         const dir = file.dirname
         // Link target file path
-        const path = join(dir, `${url}x`)
+        let path = /^MatrixOne\//.test(url)
+          ? join(DOCS_ABS_DIR, url)
+          : join(dir, url)
+        existsSync(path) || (path += 'x')
         linkTasks.push(
           readFile(path, 'utf8').then((src) => {
             const title = extractMainTitle(src)
