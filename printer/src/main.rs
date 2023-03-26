@@ -1,14 +1,9 @@
-use std::{env, error::Error, process};
+use std::{error::Error, process};
 
-use printer::{run, CLIConfig};
+use printer::run;
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    let args: Vec<String> = env::args().skip(1).collect();
-
-    let cli_config = CLIConfig::build(&args);
-
-    if let Err(err) = run(cli_config).await {
+fn main() -> Result<(), Box<dyn Error>> {
+    if let Err(err) = run() {
         eprintln!("An error occurred: {}", err);
         process::exit(1);
     };
