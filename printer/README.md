@@ -12,6 +12,13 @@ cd printer
 
 npm ci
 
+# In Linux
+./pinter
+# In Windows
+start printer.exe
+
+npm run dev
+
 npm run print
 ```
 
@@ -29,10 +36,4 @@ cd printer
 cargo build
 ```
 
-Move the `print` executable under `target/debug` to `printer`. Or you can modify the `print` script in `package.json` to `SERVE=1 ./target/debug/printer`.
-
-```shell
-npm ci
-
-npm run print
-```
+Move the `printer` executable under `target/debug` to `printer`.

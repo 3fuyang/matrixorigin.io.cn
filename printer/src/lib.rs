@@ -103,8 +103,9 @@ fn escape_mdx_preserved(src: &str) -> Result<(bool, String), Box<dyn Error>> {
 
     let break_line_tag_re = Regex::new(r"<br>")?;
     let left_curly_bracket_re = Regex::new(r"{")?;
-    let left_arrow_bracket_re = Regex::new(r"<(?!https?|p|a\s|c\s|img\s|br|h3|/\w)")?;
+    let left_arrow_bracket_re = Regex::new(r"<(?!https?|/?p>|/?a(\s|>)|c\s|/?img\s|/?br|/?h3)")?;
     let comment_re = Regex::new(r"<!--(.(?!-->))*.-->")?;
+    let bare_link_re = Regex::new(r"<(?<url>https?://(.(?!>))*[^>]?)>")?;
 
     let match_br = break_line_tag_re.is_match(src)?;
     if match_br {
@@ -130,8 +131,18 @@ fn escape_mdx_preserved(src: &str) -> Result<(bool, String), Box<dyn Error>> {
         result = comment_re.replace_all(&result, r"").to_string();
     }
 
+    let match_bare_link = bare_link_re.is_match(&result)?;
+    if match_bare_link {
+        let after = bare_link_re.replace_all(&result, |caps: &Captures| {
+            let link_url = caps.get(1).map(|m| m.as_str()).unwrap_or("");
+            link_url.to_string()
+        });
+
+        result = after.to_string();
+    }
+
     Ok((
-        match_br || match_left_curly_bracket || match_left_arrow_bracket || match_comment,
+        match_br || match_left_curly_bracket || match_left_arrow_bracket || match_comment || match_bare_link,
         result,
     ))
 }

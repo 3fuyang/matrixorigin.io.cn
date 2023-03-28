@@ -11,13 +11,14 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm run start',
-    port: 3000,
-  },
+  // webServer: {
+  //   command: 'npm run start',
+  //   port: 3000,
+  // },
   testDir: './tests',
+  testMatch: '*.spec.ts',
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 3000 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.

@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "start": "SERVE=1 ./printer",
+    "start": "astro preview",
     "print": "playwright test",
     "test": "vitest --ui",
     "prepare": "playwright install chromium",

@@ -21,6 +21,7 @@ for (const node of catalog) {
     const absPath = join(process.cwd(), '../docs/MatrixOne', path)
     const exists = existsSync(absPath)
     if (path) {
+      // Use '../../../' in Linux and '../../' in Windows
       const url = '../../../docs/MatrixOne/' + path + (exists ? '' : 'x')
       globTasks.push(import(url))
     }

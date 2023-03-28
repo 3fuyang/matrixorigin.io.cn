@@ -9,6 +9,7 @@ import {
   extractMainTitle,
   escapeArrowBrackets,
   eraseComments,
+unwrapBareLink,
 } from '../src/shared'
 
 test('Should replace MKDocs-style admonitions with generic directives', async () => {
@@ -77,4 +78,12 @@ test('Should erase html style comments', () => {
   const result = eraseComments(src)
 
   assert.equal(result, 'I am a database rockstar.')
+})
+
+test('Should unwrap <> style bare links', () => {
+  const src = `For more info, you can refer to <https://docs.matrixorigin.cn>.`
+
+  const result = unwrapBareLink(src)
+
+  assert.equal(result, `For more info, you can refer to https://docs.matrixorigin.cn.`)
 })
