@@ -1,6 +1,4 @@
-import GithubSlugger from 'github-slugger'
-
-const slugger = new GithubSlugger()
+import { slug } from 'github-slugger'
 
 const MAIN_TITLE_PATTERN = /# (.*)(\n|\r\n)/
 
@@ -11,5 +9,5 @@ export function extractMainTitle(src: string) {
       .trim()
       .replace(/(^\*{2})|(\*{2}$)/, '') ?? ''
 
-  return slugger.slug(title)
+  return slug(title)
 }

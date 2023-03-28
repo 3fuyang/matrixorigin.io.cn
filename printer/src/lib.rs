@@ -142,7 +142,11 @@ fn escape_mdx_preserved(src: &str) -> Result<(bool, String), Box<dyn Error>> {
     }
 
     Ok((
-        match_br || match_left_curly_bracket || match_left_arrow_bracket || match_comment || match_bare_link,
+        match_br
+            || match_left_curly_bracket
+            || match_left_arrow_bracket
+            || match_comment
+            || match_bare_link,
         result,
     ))
 }
