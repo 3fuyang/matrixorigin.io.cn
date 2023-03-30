@@ -7,6 +7,7 @@ import { parse } from 'yaml'
 
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { preWalk, transformCatalog } from '~/shared'
+import TOC from '~/components/TOC.astro'
 
 const mkdocsYaml = parse(
   await readFile(join(process.cwd(), '../mkdocs.yml'), 'utf8')
@@ -32,6 +33,17 @@ const posts = await Promise.all(globTasks)
 ---
 
 <BaseLayout>
+  <article
+    class:list={[
+      'mx-auto',
+      'prose',
+      'prose-ul:list-none',
+      'prose-ul:pl-2',
+      'prose-h2:mt-0',
+    ]}
+  >
+    <TOC {...{ catalog }} />
+  </article>
   {
     posts.map(({ Content }) => (
       <article

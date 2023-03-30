@@ -15,17 +15,13 @@ test('Should print the document as PDF', async ({ page }) => {
       displayHeaderFooter: true,
 
       /**
-       * HTML template for the print footer. Should use the same format as the `headerTemplate`.
-       */
-      footerTemplate: 'pageNumber',
-
-      /**
        * Paper format. If set, takes priority over `width` or `height` options. Defaults to 'Letter'.
        */
       format: 'A4',
 
       /**
-       * HTML template for the print header. Should be valid HTML markup with following classes used to inject printing
+       * HTML template for the print header.
+       * Should be valid HTML markup with following classes used to inject printing
        * values into them:
        * - `'date'` formatted print date
        * - `'title'` document title
@@ -33,7 +29,28 @@ test('Should print the document as PDF', async ({ page }) => {
        * - `'pageNumber'` current page number
        * - `'totalPages'` total pages in the document
        */
-      headerTemplate: 'title',
+      headerTemplate: `<div
+        style="display: flex;
+        justify-content: end;
+        align-items: center;
+        width: 100%;
+        font-size: 10px;
+        font-weight: 500;
+        padding-right: 30px;">
+        <div class="title"></div>
+      </div>`,
+
+      /**
+       * HTML template for the print footer. Should use the same format as the `headerTemplate`.
+       */
+      footerTemplate: `<div
+        style="width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;">
+        <div class="pageNumber"></div>
+      </div>`,
 
       /**
        * Paper height, accepts values labeled with units.
@@ -52,7 +69,7 @@ test('Should print the document as PDF', async ({ page }) => {
         /**
          * Top margin, accepts values labeled with units. Defaults to `0`.
          */
-        top: 0,
+        top: 36,
 
         /**
          * Right margin, accepts values labeled with units. Defaults to `0`.
@@ -62,7 +79,7 @@ test('Should print the document as PDF', async ({ page }) => {
         /**
          * Bottom margin, accepts values labeled with units. Defaults to `0`.
          */
-        bottom: 0,
+        bottom: 36,
 
         /**
          * Left margin, accepts values labeled with units. Defaults to `0`.
