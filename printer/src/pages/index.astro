@@ -24,10 +24,8 @@ for (const node of catalog) {
     if (path) {
       /**
        * The relative path to be passed to `import()`.
-       *
-       * **Note**: Use `'../../../'` in Linux and `'../../'` in Windows
        */
-      const url = '../../docs/MatrixOne/' + path + (exists ? '' : 'x')
+      const url = '../../../docs/MatrixOne/' + path + (exists ? '' : 'x')
       globTasks.push(import(url))
     }
   })
