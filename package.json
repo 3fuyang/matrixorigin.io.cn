@@ -2,6 +2,7 @@
   "name": "matrixorigin.io.cn",
   "scripts": {
     "lint": "autocorrect --lint './docs/MatrixOne' && markdownlint-cli2 './docs/MatrixOne/**/*.md'",
+    "lint:ci": "autocorrect --lint --no-diff-bg-color './docs/MatrixOne' && markdownlint-cli2 './docs/MatrixOne/**/*.md'",
     "lint:fix": "autocorrect --fix './docs/MatrixOne' && npx markdownlint-cli2-fix './docs/MatrixOne/**/*.md'"
   },
   "devDependencies": {
